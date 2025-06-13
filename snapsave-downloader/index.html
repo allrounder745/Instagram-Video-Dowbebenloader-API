@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Video Downloader</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      padding: 1rem;
+    }
+    h1 {
+      color: #00ffd5;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 8px #00ffd5;
+    }
+    input {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.6rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    button {
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      background: #00ffd5;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #00cbb3;
+    }
+    #result {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .download-link {
+      color: #00ffd5;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Instagram Video Downloader</h1>
+
+  <input type="text" id="urlInput" placeholder="Paste Instagram Video URL here" />
+
+  <button onclick="download()">Download</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function download() {
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) return alert("Please enter a valid Instagram URL.");
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = "Fetching download link... 🔄";
+
+      try {
+        // Request to your Java backend API endpoint
+        const response = await fetch(`/api?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+
+        if (data.status === 'success' && data.download_url) {
+          resultDiv.innerHTML = `<a class="download-link" href="${data.download_url}" target="_blank" download>⬇️ Download Video</a>`;
+        } else {
+          resultDiv.innerHTML = "❌ Failed to fetch video. Please check the URL.";
+        }
+      } catch (err) {
+        resultDiv.innerHTML = "❌ Error: " + err.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
